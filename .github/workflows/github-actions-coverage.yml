@@ -17,6 +17,9 @@ jobs:
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
       # Code Coverage
+  Code-Coverage:
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
