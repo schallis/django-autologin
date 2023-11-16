@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Set PR coverage manually
-      run: echo "89" > pr-coverage
+      run: echo "88" > pr-coverage
 
     - name: Download master coverage metric
       id: download-master-coverage
