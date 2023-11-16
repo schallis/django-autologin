@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - run: echo "89" > pr-coverage
-    - name: Download master coverage from any branch (only generated on MERGE)
+    - name: Download master coverage metric
       id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -28,7 +28,7 @@ jobs:
             echo "PR coverage less than Master coverage. Failing build."
             exit 1
         fi
-    - name: Upload artifact - (Branch specific)
+    - name: Upload PR coverage metric
       uses: actions/upload-artifact@v2
       with:
         name: pr-coverage
