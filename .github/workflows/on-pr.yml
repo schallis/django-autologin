@@ -1,0 +1,24 @@
+name: On Pull Request Workflow
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: echo "80" > pr-coverage
+    - name: Download master coverage from any branch (only generated on MERGE)
+      id: download-artifact
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        name: master-coverage
+        if_no_artifact_found: warn
+    - name: Upload artifact - (Branch specific)
+      uses: actions/upload-artifact@v2
+      with:
+        name: pr-coverage
+        path: pr-coverage

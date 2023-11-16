@@ -85,3 +85,5 @@ class TestSiteMetadataMapping(TestCase):
         self.assertTrue(isinstance(redirect, HttpResponseRedirect))
         self.assertEqual(redirect['location'], settings.LOGIN_REDIRECT_URL)
         self.assertTrue(request.user.is_authenticated())
+
+        # Comment
