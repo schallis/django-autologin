@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo "95" > pr-coverage
+    - run: echo "91" > pr-coverage
     - name: Download master coverage from any branch (only generated on MERGE)
       id: download-artifact
       uses: dawidd6/action-download-artifact@v2
@@ -20,6 +20,13 @@ jobs:
         if_no_artifact_found: warn
     - run: |
         echo "Master coverage is at $(cat master-coverage)"
+        echo "PR coverage is at $(cat pr-coverage)"
+        COMPARISON="$(cat pr-coverage)<$(cat master-coverage)"
+        echo $COMPARISON
+        if [ $(echo $COMPARISON | bc) -eq 1 ]; then
+            echo "PR coverage less than Master coverage. Failing build."
+            exit 1
+        fi
     - name: Upload artifact - (Branch specific)
       uses: actions/upload-artifact@v2
       with:

@@ -27,7 +27,15 @@ jobs:
     - run: |
         echo "PR coverage is $(cat pr-coverage)"
         echo "Setting PR coverage as Master coverage"
-        cp pr-coverage master-coverage
+        COMPARISON="$(cat pr-coverage)>$(cat master-coverage)"
+        echo $COMPARISON
+        if [ $(echo $COMPARISON | bc) -eq 1 ]; then
+            echo "PR coverage is greater than Master coverage. Upping limit."
+            cp pr-coverage master-coverage
+        else
+            echo "PR coverage is NOT greater than Master coverage. Keeping existing limit."
+            exit 0
+        fi
     - name: Upload coverage to master
       uses: actions/upload-artifact@v2
       with:
