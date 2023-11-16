@@ -24,6 +24,14 @@ jobs:
         workflow: on-pr.yml
         github_token: ${{secrets.GITHUB_TOKEN}}
         name: pr-coverage
+    - name: Download master coverage from any branch (only generated on MERGE)
+      id: download-artifact
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN}}
+        workflow: on-merge.yml
+        name: master-coverage
+        if_no_artifact_found: warn
     - run: |
         echo "PR coverage is $(cat pr-coverage)"
         echo "Setting PR coverage as Master coverage"

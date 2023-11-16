@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo "91" > pr-coverage
+    - run: echo "89" > pr-coverage
     - name: Download master coverage from any branch (only generated on MERGE)
       id: download-artifact
       uses: dawidd6/action-download-artifact@v2
