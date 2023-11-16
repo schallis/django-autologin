@@ -21,6 +21,11 @@ jobs:
     - run: |
         echo "Master coverage is at $(cat master-coverage)"
         echo "PR coverage is at $(cat pr-coverage)"
+        COMPARISON="$(cat pr-coverage)<$(cat master-coverage)"
+        echo $COMPARISON
+        if [ $(echo $COMPARISON | br) -eq 1 ]; then
+            echo "PR coverage less than Master coverage. Failing build."
+            exit 1
     - name: Upload artifact - (Branch specific)
       uses: actions/upload-artifact@v2
       with:
