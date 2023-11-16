@@ -25,7 +25,7 @@ jobs:
         github_token: ${{secrets.GITHUB_TOKEN}}
         name: pr-coverage
     - run: |
-        echo "PR coverage is $(cat pr-coverage/pr-coverage)"
+        echo "PR coverage is $(cat pr-coverage)"
         echo "Setting PR coverage as Master coverage"
         cp pr-coverage master-coverage
     - name: Upload coverage to master
