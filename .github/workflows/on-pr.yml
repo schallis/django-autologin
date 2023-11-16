@@ -11,7 +11,7 @@ jobs:
     steps:
     - run: echo "89" > pr-coverage
     - name: Download master coverage from any branch (only generated on MERGE)
-      id: download-artifact
+      id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}

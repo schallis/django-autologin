@@ -17,7 +17,7 @@ jobs:
     #     name: pr-coverage
     #     path: pr-coverage
     - name: Download PR coverage from PR branch
-      id: download-artifact
+      id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         branch: ${{ env.BRANCH_NAME }}
@@ -25,7 +25,7 @@ jobs:
         github_token: ${{secrets.GITHUB_TOKEN}}
         name: pr-coverage
     - name: Download master coverage from any branch (only generated on MERGE)
-      id: download-artifact
+      id: download-master-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
