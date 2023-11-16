@@ -2,6 +2,7 @@ name: On Pull Request Workflow
 
 on:
   pull_request:
+    branches: [master]
 
 jobs:
   build:
