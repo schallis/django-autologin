@@ -11,8 +11,9 @@ jobs:
     steps:
     - name: Set PR coverage manually
       run: echo "89" > pr-coverage
+
     - name: Download master coverage metric
-      id: download-pr-coverage
+      id: download-master-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
@@ -21,16 +22,23 @@ jobs:
         if_no_artifact_found: warn
     - name: Checking for coverage regression
       run: |
-        echo "Master coverage is at $(cat master-coverage)"
-        echo "PR coverage is at $(cat pr-coverage)"
-        COMPARISON="$(cat pr-coverage)<$(cat master-coverage)"
-        echo $COMPARISON
-        if [ $(echo $COMPARISON | bc) -eq 1 ]; then
-            echo "PR coverage less than Master coverage. Failing build."
-            exit 1
+        CURRENT_COVERAGE=$(cat pr-coverage)
+        if [ -s master-coverage ]; then
+            $MASTER_COVERAGE=$(cat master-coverage)
+            echo "Master coverage is at $MASTER_COVERAGE"
+            echo "PR coverage is at $CURRENT_COVERAGE"
+            COMPARISON="$CURRENT_COVERAGE<$MASTER_COVERAGE"
+            echo "Coverage comparison: $COMPARISON"
+            if [ $(echo $COMPARISON | bc) -eq 1 ]; then
+                echo "PR coverage less than Master coverage. Failing build."
+                exit 1
+            fi
+        else
+            echo "No previous coverage metric found. Current coverage is $CURRENT_COVERAGE"
         fi
     - name: Upload PR coverage metric
       uses: actions/upload-artifact@v2
       with:
         name: pr-coverage
         path: pr-coverage
+        if-no-files-found: error
