@@ -5,12 +5,13 @@ on:
     branches: [master]
 
 jobs:
-  coverage:
+  check-coverage-regression:
+    name: Check for coverage regression
     runs-on: ubuntu-latest
 
     steps:
     - name: Set PR coverage manually
-      run: echo "95" > pr-coverage
+      run: echo "95.5" > pr-coverage
 
     - name: Download master coverage metric
       id: download-master-coverage
@@ -27,9 +28,11 @@ jobs:
             MASTER_COVERAGE=$(cat master-coverage)
             echo "Master coverage is at $MASTER_COVERAGE"
             echo "PR coverage is at $CURRENT_COVERAGE"
-            COMPARISON="$CURRENT_COVERAGE<$MASTER_COVERAGE"
+            COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
             echo "Coverage comparison: $COMPARISON"
             if [ $(echo $COMPARISON | bc) -eq 1 ]; then
+                echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
+            else
                 echo "PR coverage less than Master coverage. Failing build."
                 exit 1
             fi
