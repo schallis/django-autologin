@@ -11,11 +11,18 @@ jobs:
     if: github.event.pull_request.merged == true
 
     steps:
-    - name: Download coverage from PR (specific branch)
-      uses: actions/download-artifact@v2
+    # - name: Download coverage from PR (specific branch)
+    #   uses: actions/download-artifact@v2
+    #   with:
+    #     name: pr-coverage
+    #     path: pr-coverage
+    - name: Download PR coverage from PR branch
+      id: download-artifact
+      uses: dawidd6/action-download-artifact@v2
       with:
+        branch: ${{ env.BRANCH_NAME }}
+        github_token: ${{secrets.GITHUB_TOKEN}}
         name: pr-coverage
-        path: pr-coverage
     - run: |
         echo "PR coverage is $(cat pr-coverage/pr-coverage)"
         echo "Setting PR coverage as Master coverage"
