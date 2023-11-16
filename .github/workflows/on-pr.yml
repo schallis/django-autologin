@@ -9,16 +9,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo "89" > pr-coverage
-    - name: Download master coverage from any branch (only generated on MERGE)
-      id: download-artifact
+    - name: Set PR coverage manually
+      run: echo "89" > pr-coverage
+    - name: Download master coverage metric
+      id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
         workflow: on-merge.yml
         name: master-coverage
         if_no_artifact_found: warn
-    - run: |
+    - name: Checking for coverage regression
+      run: |
         echo "Master coverage is at $(cat master-coverage)"
         echo "PR coverage is at $(cat pr-coverage)"
         COMPARISON="$(cat pr-coverage)<$(cat master-coverage)"
@@ -27,7 +29,7 @@ jobs:
             echo "PR coverage less than Master coverage. Failing build."
             exit 1
         fi
-    - name: Upload artifact - (Branch specific)
+    - name: Upload PR coverage metric
       uses: actions/upload-artifact@v2
       with:
         name: pr-coverage

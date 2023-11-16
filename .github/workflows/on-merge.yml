@@ -16,23 +16,24 @@ jobs:
     #   with:
     #     name: pr-coverage
     #     path: pr-coverage
-    - name: Download PR coverage from PR branch
-      id: download-artifact
+    - name: Download PR coverage metric
+      id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         branch: ${{ env.BRANCH_NAME }}
         workflow: on-pr.yml
         github_token: ${{secrets.GITHUB_TOKEN}}
         name: pr-coverage
-    - name: Download master coverage from any branch (only generated on MERGE)
-      id: download-artifact
+    - name: Download master coverage metric
+      id: download-master-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
         workflow: on-merge.yml
         name: master-coverage
         if_no_artifact_found: warn
-    - run: |
+    - name: Checking for coverage regression
+      run: |
         echo "PR coverage is $(cat pr-coverage)"
         echo "Setting PR coverage as Master coverage"
         COMPARISON="$(cat pr-coverage)>$(cat master-coverage)"
@@ -44,7 +45,7 @@ jobs:
             echo "PR coverage is NOT greater than Master coverage. Keeping existing limit."
             exit 0
         fi
-    - name: Upload coverage to master
+    - name: Update master coverage metric
       uses: actions/upload-artifact@v2
       with:
         name: master-coverage
