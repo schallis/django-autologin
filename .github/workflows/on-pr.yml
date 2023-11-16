@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Set PR coverage manually
-      run: echo "89" > pr-coverage
+      run: echo "95" > pr-coverage
 
     - name: Download master coverage metric
       id: download-master-coverage
@@ -24,7 +24,7 @@ jobs:
       run: |
         CURRENT_COVERAGE=$(cat pr-coverage)
         if [ -s master-coverage ]; then
-            $MASTER_COVERAGE=$(cat master-coverage)
+            MASTER_COVERAGE=$(cat master-coverage)
             echo "Master coverage is at $MASTER_COVERAGE"
             echo "PR coverage is at $CURRENT_COVERAGE"
             COMPARISON="$CURRENT_COVERAGE<$MASTER_COVERAGE"

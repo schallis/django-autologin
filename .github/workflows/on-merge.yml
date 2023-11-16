@@ -29,7 +29,7 @@ jobs:
         if_no_artifact_found: fail
     - name: Setting PR coverage as Master coverage
       run: |
-        echo "PR coverage is $(cat pr-coverage)"
+        echo "Minimum coverage for this repo will now be $(cat pr-coverage)"
         cp pr-coverage master-coverage
     - name: Update master coverage metric
       uses: actions/upload-artifact@v2
