@@ -43,11 +43,11 @@ jobs:
         fi
 
   update-master-coverage:
-    needs: check-master-coverage
     runs-on: ubuntu-latest
+    needs: check-master-coverage
+    if: needs.check-master-coverage.outputs.update != 'true'
     steps:
     - name: Update master coverage metric
-      if: needs.check-master-coverage.outputs.update != 'true'
       uses: actions/upload-artifact@v2
       with:
         name: master-coverage
