@@ -9,14 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo "90" > pr-coverage
+    - run: echo "95" > pr-coverage
     - name: Download master coverage from any branch (only generated on MERGE)
       id: download-artifact
       uses: dawidd6/action-download-artifact@v2
       with:
         github_token: ${{secrets.GITHUB_TOKEN}}
+        workflow: on-merge.yml
         name: master-coverage
         if_no_artifact_found: warn
+    - run: |
+        echo "Master coverage is at $(cat master-coverage)"
     - name: Upload artifact - (Branch specific)
       uses: actions/upload-artifact@v2
       with:
