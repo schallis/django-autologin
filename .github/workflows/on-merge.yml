@@ -5,8 +5,16 @@ on:
     types: [closed]
     branches: [master]
 
+
+# The purpose of this workflow is to update the master coverage metric for the
+# repo. We can only do this when merging to master.
+
+# We are assuming here that PR coverage has been computed and uploaded as an
+# artifact during a PR workflow. If it does not exist, we will fail this
+# workflow and not update the master coverage.
+
 jobs:
-  check-master-coverage:
+  set-master-coverage:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
@@ -18,35 +26,11 @@ jobs:
         workflow: on-pr.yml
         github_token: ${{secrets.GITHUB_TOKEN}}
         name: pr-coverage
-    - name: Download master coverage metric
-      id: download-master-coverage
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        github_token: ${{secrets.GITHUB_TOKEN}}
-        workflow: on-merge.yml
-        name: master-coverage
-        if_no_artifact_found: warn
-    - name: Checking for coverage regression
-      id: check-regression
+        if_no_artifact_found: fail
+    - name: Setting PR coverage as Master coverage
       run: |
         echo "PR coverage is $(cat pr-coverage)"
-        echo "Setting PR coverage as Master coverage"
-        COMPARISON="$(cat pr-coverage)>$(cat master-coverage)"
-        echo $COMPARISON
-        if [ $(echo $COMPARISON | bc) -eq 1 ]; then
-            echo "PR coverage is greater than Master coverage. Upping limit."
-            cp pr-coverage master-coverage
-            echo "update=true" >> $GITHUB_ENV
-        else
-            echo "PR coverage is NOT greater than Master coverage. Keeping existing limit."
-            echo "update=false" >> $GITHUB_ENV
-        fi
-
-  update-master-coverage:
-    runs-on: ubuntu-latest
-    needs: check-master-coverage
-    if: needs.check-master-coverage.outputs.update != 'true'
-    steps:
+        cp pr-coverage master-coverage
     - name: Update master coverage metric
       uses: actions/upload-artifact@v2
       with:
