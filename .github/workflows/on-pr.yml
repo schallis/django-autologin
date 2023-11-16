@@ -28,13 +28,13 @@ jobs:
             MASTER_COVERAGE=$(cat master-coverage)
             echo "Master coverage is at $MASTER_COVERAGE"
             echo "PR coverage is at $CURRENT_COVERAGE"
-            COMPARISON="$CURRENT_COVERAGE<$MASTER_COVERAGE"
+            COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
             echo "Coverage comparison: $COMPARISON"
             if [ $(echo $COMPARISON | bc) -eq 1 ]; then
+                echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
+            else
                 echo "PR coverage less than Master coverage. Failing build."
                 exit 1
-            else
-                echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
             fi
         else
             echo "No previous coverage metric found. Current coverage is $CURRENT_COVERAGE"
