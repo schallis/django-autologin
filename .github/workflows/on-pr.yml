@@ -18,6 +18,8 @@ jobs:
         workflow: on-merge.yml
         name: master-coverage
         if_no_artifact_found: warn
+    - run: |
+        echo "Master coverage is at $(cat master-coverage)"
     - name: Upload artifact - (Branch specific)
       uses: actions/upload-artifact@v2
       with:
