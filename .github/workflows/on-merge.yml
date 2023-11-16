@@ -1,20 +1,23 @@
-name: On Merge Workflow
+name: On PR Merge Update Coverage
+
+# The purpose of this workflow is to update the master coverage metric for the
+# repo. We can only do this when merging to master.
+
+# We are assuming here that PR coverage has been computed, deemed acceptable,
+# and uploaded as an artifact during a PR workflow. If it does not exist, we
+# will fail this workflow and not update the master coverage.
+
+# We are NOT guaranteed to have a master coverage at this point. This could be
+# the first PR (or first since the master coverage artifact expired).
 
 on:
   pull_request:
     types: [closed]
     branches: [master]
 
-
-# The purpose of this workflow is to update the master coverage metric for the
-# repo. We can only do this when merging to master.
-
-# We are assuming here that PR coverage has been computed and uploaded as an
-# artifact during a PR workflow. If it does not exist, we will fail this
-# workflow and not update the master coverage.
-
 jobs:
   set-master-coverage:
+    name: Set master coverage
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:

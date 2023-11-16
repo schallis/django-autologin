@@ -5,7 +5,8 @@ on:
     branches: [master]
 
 jobs:
-  coverage:
+  check-coverage-regression:
+    name: Check for coverage regression
     runs-on: ubuntu-latest
 
     steps:
