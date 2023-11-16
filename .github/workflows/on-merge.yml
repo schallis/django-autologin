@@ -32,8 +32,8 @@ jobs:
         workflow: on-merge.yml
         name: master-coverage
         if_no_artifact_found: warn
-    - run: |
-        echo "Checking for coverage regression"
+    - name: Checking for coverage regression
+      run: |
         echo "PR coverage is $(cat pr-coverage)"
         echo "Setting PR coverage as Master coverage"
         COMPARISON="$(cat pr-coverage)>$(cat master-coverage)"

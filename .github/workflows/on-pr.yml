@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: echo "89" > pr-coverage
+    - name: Set PR coverage manually
+      run: echo "89" > pr-coverage
     - name: Download master coverage metric
       id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
@@ -18,8 +19,8 @@ jobs:
         workflow: on-merge.yml
         name: master-coverage
         if_no_artifact_found: warn
-    - run: |
-        echo "Checking for coverage regression"
+    - name: Checking for coverage regression
+      run: |
         echo "Master coverage is at $(cat master-coverage)"
         echo "PR coverage is at $(cat pr-coverage)"
         COMPARISON="$(cat pr-coverage)<$(cat master-coverage)"
