@@ -6,16 +6,10 @@ on:
     branches: [master]
 
 jobs:
-  download-and-upload:
+  check-master-coverage:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
-
     steps:
-    # - name: Download coverage from PR (specific branch)
-    #   uses: actions/download-artifact@v2
-    #   with:
-    #     name: pr-coverage
-    #     path: pr-coverage
     - name: Download PR coverage metric
       id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
@@ -47,8 +41,13 @@ jobs:
             echo "PR coverage is NOT greater than Master coverage. Keeping existing limit."
             echo "update=false" >> $GITHUB_ENV
         fi
+
+  update-master-coverage:
+    needs: check-master-coverage
+    runs-on: ubuntu-latest
+    steps:
     - name: Update master coverage metric
-      if: steps.check-regression.outputs.update != 'true'
+      if: needs.check-master-coverage.outputs.update != 'true'
       uses: actions/upload-artifact@v2
       with:
         name: master-coverage
