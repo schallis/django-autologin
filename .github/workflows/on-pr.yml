@@ -26,6 +26,7 @@ jobs:
         if [ $(echo $COMPARISON | br) -eq 1 ]; then
             echo "PR coverage less than Master coverage. Failing build."
             exit 1
+        fi
     - name: Upload artifact - (Branch specific)
       uses: actions/upload-artifact@v2
       with:
