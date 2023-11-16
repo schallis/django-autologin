@@ -1,0 +1,25 @@
+name: On Merge Workflow
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  download-and-upload:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+    - run: echo "80" > pr-coverage
+    - run: cp pr-coverage master-coverage
+    # - name: Download coverage from PR
+    #   uses: actions/download-artifact@v2
+    #   with:
+    #     name: pr-coverage
+    #     path: coverage
+    - name: Upload coverage to master
+      uses: actions/upload-artifact@v2
+      with:
+        name: master-coverage
+        path: master-coverage
