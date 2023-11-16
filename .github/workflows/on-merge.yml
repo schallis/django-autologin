@@ -29,7 +29,7 @@ jobs:
         echo "Setting PR coverage as Master coverage"
         COMPARISON="$(cat pr-coverage)>$(cat master-coverage)"
         echo $COMPARISON
-        if [ $(echo $COMPARISON | br) -eq 1 ]; then
+        if [ $(echo $COMPARISON | bc) -eq 1 ]; then
             echo "PR coverage is greater than Master coverage. Upping limit."
             cp pr-coverage master-coverage
         else
