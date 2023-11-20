@@ -40,7 +40,7 @@ jobs:
             if [ $(echo $COMPARISON | bc) -eq 1 ]; then
                 echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
             else
-                echo "PR coverage less than Master coverage."
+                echo "PR coverGge less than Master coverage."
                 REGRESSION=1
             fi
         else
@@ -52,6 +52,7 @@ jobs:
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
+        append: true
         message: |
             Run ${{ github.run_attempt }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
