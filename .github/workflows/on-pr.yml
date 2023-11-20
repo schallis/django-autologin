@@ -46,6 +46,7 @@ jobs:
         fi
         echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
         echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
+        echo "regression=$REGRESSION" >> "$GITHUB_OUTPUT"
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
@@ -53,7 +54,7 @@ jobs:
             Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
       run: |
-        REGRESSION=${{ steps.check-coverage.outputs.regression }}}
+        REGRESSION=${{ steps.check-coverage.outputs.regression }}
         if [ "$REGRESSION" -eq 1 ]; then
             echo "Failing build."
             exit 1
