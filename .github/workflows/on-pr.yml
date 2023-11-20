@@ -32,9 +32,10 @@ jobs:
         if [ -s master-coverage ]; then
             MASTER_COVERAGE=$(cat master-coverage)
             COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
-            DELTA=$( echo "$CURRENT_COVERAGE - $DELTA_COVERAGE" | bc )
+            DELTA=$( echo "$CURRENT_COVERAGE - $MASTER_COVERAGE" | bc )
             echo "Master coverage is at $MASTER_COVERAGE"
             echo "PR coverage is at $CURRENT_COVERAGE"
+            echo "Delta is at $DELTA"
             echo "Coverage comparison: $COMPARISON"
             if [ $(echo $COMPARISON | bc) -eq 1 ]; then
                 echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
@@ -51,9 +52,10 @@ jobs:
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
-        append: true
+        hide_and_recreate: true
+        hide_classify: "OUTDATED"
         message: |
-            Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
+            Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
       run: |
         REGRESSION=${{ steps.check-coverage.outputs.regression }}
