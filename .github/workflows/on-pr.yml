@@ -52,13 +52,8 @@ jobs:
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
-        # header: "Coverage"
-        # hide_and_recreate: true
-        # hide_classify: "OUTDATED"
-        recreate: true
-        delete: true
         message: |
-            Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
+            Run ${{ github.run_id }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
       run: |
         REGRESSION=${{ steps.check-coverage.outputs.regression }}
