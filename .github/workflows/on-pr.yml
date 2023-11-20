@@ -8,6 +8,8 @@ jobs:
   check-coverage-regression:
     name: Check for coverage regression
     runs-on: ubuntu-latest
+    permissions:
+        pull-requests: write
 
     steps:
     - name: Set PR coverage manually
@@ -22,6 +24,7 @@ jobs:
         name: master-coverage
         if_no_artifact_found: warn
     - name: Checking for coverage regression
+      id: check-coverage
       run: |
         CURRENT_COVERAGE=$(cat pr-coverage)
         if [ -s master-coverage ]; then
@@ -29,6 +32,9 @@ jobs:
             echo "Master coverage is at $MASTER_COVERAGE"
             echo "PR coverage is at $CURRENT_COVERAGE"
             COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
+            DELTA=$( echo "$MASTER_COVERAGE - $CURRENT_COVERAGE" | bc )
+            echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
+            echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
             echo "Coverage comparison: $COMPARISON"
             if [ $(echo $COMPARISON | bc) -eq 1 ]; then
                 echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
@@ -39,13 +45,19 @@ jobs:
         else
             echo "No previous coverage metric found. Current coverage is $CURRENT_COVERAGE"
         fi
+    - name: Comment with coverage details
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        message: |
+            Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Add Coverage detail to step description
       run: |
         CURRENT_COVERAGE=$(cat pr-coverage)
-        curl "https://${secrets.GIT_USER}:${secrets.GITHUB_TOKEN}@api.github.com/repos/${ORG_NAME}/${PROJECT_NAME}/statuses/${COMMIT_SHA}" -d "{\"state\": \"${STATE}\",\"target_url\": \"https://github.com/${ORG_NAME}/${PROJECT_NAME}/pull/${PULL_NUMBER}/checks?check_run_id=${RUN_ID}\",\"description\": \"${CURRENT_COVERAGE}%\",\"context\": \"code cov\"}"
+        curl 
+        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'
+        https://api.github.com/repos/${ORG_NAME}/${PROJECT_NAME}/statuses/${COMMIT_SHA}" -d "{\"state\": \"${STATE}\",\"target_url\": \"https://github.com/${ORG_NAME}/${PROJECT_NAME}/pull/${PULL_NUMBER}/checks?check_run_id=${RUN_ID}\",\"description\": \"${CURRENT_COVERAGE}%\",\"context\": \"code cov\"}"
         env:
             TOTAL: ${{ steps.check-coverage.outputs.total }}
-            GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
             GIT_USER: ${{ secrets.GIT_USER }}
             ORG_NAME: ${{ secrets.ORG_NAME }}
             PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
