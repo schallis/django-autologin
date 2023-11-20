@@ -53,7 +53,7 @@ jobs:
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         message: |
-            Run ${{ github.run_id }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
+            Run ${{ github.run_attempt }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
       run: |
         REGRESSION=${{ steps.check-coverage.outputs.regression }}
