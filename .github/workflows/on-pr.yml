@@ -50,20 +50,6 @@ jobs:
       with:
         message: |
             Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
-    - name: Add Coverage detail to step description
-      run: |
-        CURRENT_COVERAGE=$(cat pr-coverage)
-        curl 
-        --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'
-        https://api.github.com/repos/${ORG_NAME}/${PROJECT_NAME}/statuses/${COMMIT_SHA}" -d "{\"state\": \"${STATE}\",\"target_url\": \"https://github.com/${ORG_NAME}/${PROJECT_NAME}/pull/${PULL_NUMBER}/checks?check_run_id=${RUN_ID}\",\"description\": \"${CURRENT_COVERAGE}%\",\"context\": \"code cov\"}"
-        env:
-            TOTAL: ${{ steps.check-coverage.outputs.total }}
-            GIT_USER: ${{ secrets.GIT_USER }}
-            ORG_NAME: ${{ secrets.ORG_NAME }}
-            PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
-            COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
-            RUN_ID: ${{ github.run_id }}
-            PULL_NUMBER: ${{ github.event.pull_request.number }}
     - name: Upload PR coverage metric
       uses: actions/upload-artifact@v2
       with:
