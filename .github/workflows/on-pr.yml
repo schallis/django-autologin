@@ -49,7 +49,7 @@ jobs:
         echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
         echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
         echo "regression=$REGRESSION" >> "$GITHUB_OUTPUT"
-        echo "CURRENT_TIME=$(date)" >> $GITHUB_ENV
+        echo "current_time=$(date)" >> $GITHUB_ENV
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
