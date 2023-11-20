@@ -46,6 +46,11 @@ jobs:
         fi
         echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
         echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
+    - name: Comment with coverage details
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        message: |
+            Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
       run: |
         REGRESSION=${{ steps.check-coverage.outputs.regression }}}
@@ -53,11 +58,6 @@ jobs:
             echo "Failing build."
             exit 1
         fi
-    - name: Comment with coverage details
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        message: |
-            Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Upload PR coverage metric
       uses: actions/upload-artifact@v2
       with:
