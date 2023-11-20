@@ -41,8 +41,10 @@ jobs:
         fi
     - name: Add Coverage detail to step description
       run: |
-        curl "https://${secrets.GIT_USER}:${secrets.GITHUB_TOKEN}@api.github.com/repos/${ORG_NAME}/${PROJECT_NAME}/statuses/${COMMIT_SHA}" -d "{\"state\": \"${STATE}\",\"target_url\": \"https://github.com/${ORG_NAME}/${PROJECT_NAME}/pull/${PULL_NUMBER}/checks?check_run_id=${RUN_ID}\",\"description\": \"${total}%\",\"context\": \"code cov\"}"
+        CURRENT_COVERAGE=$(cat pr-coverage)
+        curl "https://${secrets.GIT_USER}:${secrets.GITHUB_TOKEN}@api.github.com/repos/${ORG_NAME}/${PROJECT_NAME}/statuses/${COMMIT_SHA}" -d "{\"state\": \"${STATE}\",\"target_url\": \"https://github.com/${ORG_NAME}/${PROJECT_NAME}/pull/${PULL_NUMBER}/checks?check_run_id=${RUN_ID}\",\"description\": \"${CURRENT_COVERAGE}%\",\"context\": \"code cov\"}"
         env:
+            TOTAL: ${{ steps.check-coverage.outputs.total }}
             GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
             GIT_USER: ${{ secrets.GIT_USER }}
             ORG_NAME: ${{ secrets.ORG_NAME }}
