@@ -56,6 +56,7 @@ jobs:
         # hide_and_recreate: true
         # hide_classify: "OUTDATED"
         recreate: true
+        delete: true
         message: |
             Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
