@@ -27,23 +27,31 @@ jobs:
       id: check-coverage
       run: |
         CURRENT_COVERAGE=$(cat pr-coverage)
+        DELTA="Unknown"
+        REGRESSION=0
         if [ -s master-coverage ]; then
             MASTER_COVERAGE=$(cat master-coverage)
+            COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
+            DELTA=$( echo "$CURRENT_COVERAGE - $DELTA_COVERAGE" | bc )
             echo "Master coverage is at $MASTER_COVERAGE"
             echo "PR coverage is at $CURRENT_COVERAGE"
-            COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
-            DELTA=$( echo "$MASTER_COVERAGE - $CURRENT_COVERAGE" | bc )
-            echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
-            echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
             echo "Coverage comparison: $COMPARISON"
             if [ $(echo $COMPARISON | bc) -eq 1 ]; then
                 echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
             else
-                echo "PR coverage less than Master coverage. Failing build."
-                exit 1
+                echo "PR coverage less than Master coverage."
             fi
         else
             echo "No previous coverage metric found. Current coverage is $CURRENT_COVERAGE"
+        fi
+        echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
+        echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
+    - name: Fail if coverage regression
+      run: |
+        REGRESSION=${{ steps.check-coverage.outputs.regression }}}
+        if [ "$REGRESSION" -eq 1 ]; then
+            echo "Failing build."
+            exit 1
         fi
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
