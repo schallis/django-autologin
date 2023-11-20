@@ -40,6 +40,7 @@ jobs:
                 echo "PR coverage greater than or equal to Master coverage. Ok to proceed."
             else
                 echo "PR coverage less than Master coverage."
+                REGRESSION=1
             fi
         else
             echo "No previous coverage metric found. Current coverage is $CURRENT_COVERAGE"
@@ -50,6 +51,7 @@ jobs:
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
+        append: true
         message: |
             Coverage is at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta)
     - name: Fail if coverage regression
