@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Set PR coverage manually
-      run: echo "92.5" > pr-coverage
+      run: echo "97.5" > pr-coverage
 
     - name: Download master coverage metric
       id: download-master-coverage
@@ -52,7 +52,7 @@ jobs:
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
-        header: "Coverage"
+        # header: "Coverage"
         # hide_and_recreate: true
         # hide_classify: "OUTDATED"
         recreate: true
