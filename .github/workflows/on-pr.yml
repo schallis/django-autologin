@@ -26,11 +26,11 @@ jobs:
     - name: Checking for coverage regression
       id: check-coverage
       run: |
-        CURRENT_COVERAGE=$(cat pr-coverage)
+        CURRENT_COVERAGE=$(cat pr-coverage | printf "%.1f\n")
         DELTA="Unknown"
         REGRESSION=0
         if [ -s master-coverage ]; then
-            MASTER_COVERAGE=$(cat master-coverage)
+            MASTER_COVERAGE=$(cat master-coverage | printf "%.1f\n")
             COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
             DELTA=$( echo "$CURRENT_COVERAGE - $MASTER_COVERAGE" | bc )
             echo "Master coverage is at $MASTER_COVERAGE"
