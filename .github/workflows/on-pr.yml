@@ -49,13 +49,12 @@ jobs:
         echo "current_coverage=$CURRENT_COVERAGE" >> "$GITHUB_OUTPUT"
         echo "delta=$DELTA" >> "$GITHUB_OUTPUT"
         echo "regression=$REGRESSION" >> "$GITHUB_OUTPUT"
-        echo "current_time=$(date)" >> $GITHUB_ENV
     - name: Comment with coverage details
       uses: marocchino/sticky-pull-request-comment@v2
       with:
         append: true
         message: |
-            Run ${{ github.run_number }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta) - ${{ steps.check-coverage.outputs.current_time }}
+            Run ${{ github.run_number }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta) - ${{ steps.check-coverage.outputs.regression == 1 && 'Regression' || 'No regression' }}
     - name: Fail if coverage regression
       run: |
         REGRESSION=${{ steps.check-coverage.outputs.regression }}
