@@ -54,7 +54,7 @@ jobs:
       with:
         append: true
         message: |
-            Run ${{ github.run_number }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta) - ${{ steps.check-coverage.outputs.regression == 1 && 'Regression' || 'No regression' }}
+            Run ${{ github.run_number }}: Coverage is now at ${{ steps.check-coverage.outputs.current_coverage }}% (${{ steps.check-coverage.outputs.delta }} delta) - ${{ steps.check-coverage.outputs.regression == 1 && '❌ Regression' || '✅ No regression' }}
     - name: Fail if coverage regression
       run: |
         REGRESSION=${{ steps.check-coverage.outputs.regression }}
