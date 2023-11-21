@@ -30,7 +30,7 @@ jobs:
         DELTA="Unknown"
         REGRESSION=0
         if [ -s master-coverage ]; then
-            MASTER_COVERAGE=$(printf "%.2f" $(cat master-coverage)
+            MASTER_COVERAGE=$(printf "%.2f" $(cat master-coverage))
             COMPARISON="$CURRENT_COVERAGE>=$MASTER_COVERAGE"
             DELTA=$( echo "$CURRENT_COVERAGE - $MASTER_COVERAGE" | bc )
             echo "Master coverage is at $MASTER_COVERAGE"
