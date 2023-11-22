@@ -17,7 +17,7 @@ jobs:
       run: |
         PR_NUMBER=${{ github.event.pull_request.number }}
         PR_COVERAGE_FILE="pr-$PR_NUMBER-coverage"
-        echo "pr_coverage_file=$PR_COVERAGE_FILE >> "$GITHUB_OUTPUT"
+        echo "pr_coverage_file=$PR_COVERAGE_FILE" >> "$GITHUB_OUTPUT"
         echo "97.5" > $PR_COVERAGE_FILE
 
     - name: Download master coverage metric
