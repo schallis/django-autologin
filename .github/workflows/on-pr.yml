@@ -13,20 +13,26 @@ jobs:
 
     steps:
     - name: Set PR coverage manually
-      run: echo "97.5" > pr-coverage
+      id: set-pr-coverage
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        PR_COVERAGE_FILE="pr-$PR_NUMBER-coverage"
+        echo "pr_coverage_file=$PR_COVERAGE_FILE >> "$GITHUB_OUTPUT"
+        echo "97.5" > $PR_COVERAGE_FILE
 
     - name: Download master coverage metric
-      id: download-master-coverage
-      uses: dawidd6/action-download-artifact@v2
+      uses: actions/download-artifact@v3
+      id: download
       with:
-        github_token: ${{secrets.GITHUB_TOKEN}}
-        workflow: on-merge.yml
         name: master-coverage
-        if_no_artifact_found: warn
+
+    - name: Display structure of downloaded files
+      run: ls -R
+    
     - name: Checking for coverage regression
       id: check-coverage
       run: |
-        CURRENT_COVERAGE=$(printf "%.2f" $(cat pr-coverage))
+        CURRENT_COVERAGE=$(printf "%.2f" $(cat ${{ steps.set-pr-coverage.outputs.pr_coverage_file }}))
         DELTA="Unknown"
         REGRESSION=0
         if [ -s master-coverage ]; then
@@ -65,6 +71,6 @@ jobs:
     - name: Upload PR coverage metric
       uses: actions/upload-artifact@v2
       with:
-        name: pr-coverage
-        path: pr-coverage
+        name: ${{ steps.set-pr-coverage.outputs.pr_coverage_file }}
+        path: ${{ steps.set-pr-coverage.outputs.pr_coverage_file }}
         if-no-files-found: error

@@ -25,10 +25,10 @@ jobs:
       id: download-pr-coverage
       uses: dawidd6/action-download-artifact@v2
       with:
-        branch: ${{ env.BRANCH_NAME }}
+        pr: ${{ github.event.pull_request.number }}
         workflow: on-pr.yml
         github_token: ${{secrets.GITHUB_TOKEN}}
-        name: pr-coverage
+        name: pr-${{ github.event.pull_request.number }}-coverage
         if_no_artifact_found: fail
     - name: Setting PR coverage as Master coverage
       run: |
